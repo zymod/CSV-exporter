@@ -1,4 +1,8 @@
+from pathlib import Path
+
 import pytest
+
+BASE_DIR = Path("data").resolve()
 
 FILE_NAME = 'test.csv'
 
@@ -51,4 +55,15 @@ PARSE_NUM_ROWS_FALLBACK_INPUTS = [
 GENERATE_DATA_IDS = [
     pytest.param(1, [1], id="single_row"),
     pytest.param(5, [1, 2, 3, 4, 5], id="small_number_of_rows"),
+]
+
+VALID_PATHS = [
+    pytest.param("file.csv", BASE_DIR / "file.csv", id="simple_file"),
+    pytest.param("subdir/file.csv", BASE_DIR / "subdir/file.csv", id="file_in_subdirectory"),
+]
+
+INVALID_PATHS = [
+    pytest.param("../file.csv", OSError, id="parent_directory_traversal"),
+    pytest.param("subdir/../../file.csv", OSError, id="multiple_parent_directory_traversal"),
+    pytest.param("/absolute/path/file.csv", OSError, id="absolute_path"),
 ]

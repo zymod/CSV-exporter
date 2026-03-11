@@ -4,6 +4,8 @@ import string
 import csv
 from pathlib import Path
 
+from project_csv.security import safe_file_path
+
 
 def generate_data(num_rows: int) -> list[dict[str, int | str | float]]:
     """Generate a list of sample data rows.
@@ -103,8 +105,7 @@ def get_or_create_file_path(file_name: str) -> str:
         Absolute path to the file as a string, e.g.
         `/home/user/project/data/file_name.csv`.
     """
-    base_dir = Path.cwd()
-    file_path = Path(base_dir) / "data" / file_name
+    file_path = safe_file_path(file_name)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     return str(file_path)
 

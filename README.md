@@ -268,7 +268,7 @@ Planned:
 - [x] Sample data export
 - [x] Fallback for values ≤ 0
 - [x] CSV writing
-- [ ] Safe Save (suffix on conflict)
+- [x] Safe Save (suffix on conflict)
 - [ ] Streaming generation (memory-efficient)
 - [ ] Input path validation
 
