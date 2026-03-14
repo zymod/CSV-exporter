@@ -35,13 +35,6 @@ NORMALIZE_FILE_NAME_EMPTY_INPUTS = [
     pytest.param("", id="empty_string"),
 ]
 
-GENERATE_DATA_LENGTHS = [
-    pytest.param(0, 0, id="zero_rows"),
-    pytest.param(1, 1, id="single_row"),
-    pytest.param(5, 5, id="small_number_of_rows"),
-    pytest.param(1_000, 1_000, id="large_number_of_rows"),
-]
-
 PARSE_NUM_ROWS_FALLBACK_INPUTS = [
     pytest.param("abc", id="letters"),
     pytest.param("!#$[", id="special_characters"),

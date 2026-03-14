@@ -3,12 +3,13 @@ import random
 import string
 import csv
 from pathlib import Path
+from collections.abc import Generator, Iterable
 
 from project_csv.security import safe_file_path
 
 
-def generate_data(num_rows: int) -> list[dict[str, int | str | float]]:
-    """Generate a list of sample data rows.
+def generate_data(num_rows: int) -> Generator[dict[str, int | str | float], None, None]:
+    """Yield sample data rows one at a time.
 
     Each row is a dictionary with the following keys:
     - 'id'   (int): sequential index starting from 1.
@@ -18,16 +19,13 @@ def generate_data(num_rows: int) -> list[dict[str, int | str | float]]:
 
     Args:
         num_rows: Number of rows to generate.
-            Should be positive. A value of 0 returns an
-            empty list.
+            Should be positive. A value of 0 yields nothing.
 
-    Returns:
-        list[dict[str, int | str | float]]: List of
-            dictionaries of length `num_rows`.
+    Yields:
+        dict[str, int | str | float]: One row at a time.
     """
-    data = []
     for i in range(1, num_rows + 1):
-        row = {
+        yield {
             "id": i,
             "code": ''.join(
                 random.choices(
@@ -35,27 +33,22 @@ def generate_data(num_rows: int) -> list[dict[str, int | str | float]]:
                     k=random.randint(3, 12)
                 )
             ),
-            "cost": random.uniform(0, 1000)
+            "cost": random.uniform(0, 1000),
         }
-        data.append(row)
-    return data
 
 
 def export_to_csv(
-    data: list[dict[str, str | float]],
+    data: Iterable[dict[int, str | float]],
     file_name: str | None = None
 ) -> str | None:
     """Export data to a CSV file in the `data/` directory.
 
-    Column headers are taken from the keys of the first
-    dictionary in the list. If `data` is empty, the file
-    is not created, but the function returns the path where
-    the file *would* have been created.
+    Rows are written one at a time so the full dataset is never
+    held in memory. If the iterator yields no rows, no file is
+    created and None is returned.
 
     Args:
-        data: List of dictionaries to save. All dictionaries
-            should have identical keys — the keys of the
-            first element determine the CSV headers.
+        data: Iterator of dictionaries to save.
         file_name: Output file name (with or without the
             .csv extension). Spaces are replaced with
             underscores, and a missing .csv extension is
@@ -64,7 +57,7 @@ def export_to_csv(
 
     Returns:
         str | None: Absolute path to the generated CSV file,
-            or None if `data` is empty and no file was created.
+            or None if the iterator was empty.
 
     Raises:
         OSError: If the directory cannot be created or the
@@ -72,19 +65,22 @@ def export_to_csv(
             permissions, full disk).
     """
     file_name = _normalize_file_name(file_name)
-    file_path = None
 
-    if data:
-        try:
-            file_path = get_or_create_file_path(file_name)
-            with open(
-                file_path, mode="w", newline="", encoding="utf-8"
-            ) as file:
-                writer = csv.DictWriter(file, fieldnames=data[0].keys())
-                writer.writeheader()
-                writer.writerows(data)
-        except OSError as e:
-            raise OSError(f"Failed to write file: {e}") from e
+    it = iter(data)
+    try:
+        first = next(it)
+    except StopIteration:
+        return None
+
+    try:
+        file_path = get_or_create_file_path(file_name)
+        with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=first.keys())
+            writer.writeheader()
+            writer.writerow(first)
+            writer.writerows(it)
+    except OSError as e:
+        raise OSError(f"Failed to write file: {e}") from e
 
     return file_path
 

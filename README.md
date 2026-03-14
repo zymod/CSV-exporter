@@ -1,4 +1,4 @@
-# CSV Sample Data Exporter
+# CSV Sample Data Generator
 
 A minimalist CLI tool for exporting sample data in CSV format.
 The project is designed with a focus on:
@@ -257,10 +257,7 @@ This enables:
 
 ## Security
 
-Planned:
-
-- path traversal protection
-- safe file writing (no overwriting)
+Path traversal protection
 
 
 ## Roadmap
@@ -268,16 +265,15 @@ Planned:
 - [x] Sample data export
 - [x] Fallback for values ≤ 0
 - [x] CSV writing
-- [x] Safe Save (suffix on conflict)
-- [ ] Streaming generation (memory-efficient)
-- [ ] Input path validation
+- [x] Path traversal protection
+- [x] Streaming generation (memory-efficient)
+- [ ] Safe Save (suffix on conflict)
 
 ### Future Development
 
 - JSON export
-- streaming generator support
 - typing and input validation using Pydantic models
-- CLI based on typer or click
+- safe file writing (no overwriting)
 
 
 ## License

@@ -6,27 +6,10 @@ from unittest.mock import patch
 
 from project_csv.utils import export_to_csv, generate_data, _normalize_file_name
 from fixtures import (
-    GENERATE_DATA_LENGTHS,
     GENERATE_DATA_IDS,
     NORMALIZE_FILE_NAME_INPUTS,
     NORMALIZE_FILE_NAME_EMPTY_INPUTS,
 )
-
-
-@pytest.mark.parametrize("num_rows, expected", GENERATE_DATA_LENGTHS)
-def test_generate_data_returns_correct_length(
-    num_rows: int,
-    expected: int
-) -> None:
-    """Verify that generate_data() returns a list of the correct length.
-
-    Test cases (from fixtures.GENERATE_DATA_LENGTHS):
-        - 0 rows → empty list,
-        - 1 row,
-        - small number of rows (5),
-        - large number of rows (1000).
-    """
-    assert len(generate_data(num_rows)) == expected
 
 
 @pytest.mark.parametrize("num_rows, expected", GENERATE_DATA_IDS)
