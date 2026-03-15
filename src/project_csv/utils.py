@@ -105,6 +105,8 @@ def _get_or_create_file_path(file_name: str) -> str:
     """
 
     file_path = _safe_file_path(file_name)
+    if file_path.exists():
+        file_path = _create_file_path_unique(file_path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     return str(file_path)
 
@@ -130,3 +132,21 @@ def _normalize_file_name(file_name: str | None = None) -> str:
     if not file_name.endswith(".csv"):
         file_name += ".csv"
     return file_name.replace(" ", "_")
+
+
+def _create_file_path_unique(file_path: Path) -> Path:
+    """Return a new Path in the same directory with a unique name.
+
+    Appends a UUID4 suffix to the stem to avoid collisions with an
+    existing file. The parent directory and extension are preserved.
+
+    Args:
+        file_path: Path to the existing file whose name should
+            be made unique.
+
+    Returns:
+        New Path with the same parent and suffix but a
+        UUID4-suffixed stem, e.g. ``data/report-3f2a…d1.csv``.
+    """
+    new_name = f"{file_path.stem}-{uuid.uuid4()}{file_path.suffix}"
+    return file_path.with_name(new_name)

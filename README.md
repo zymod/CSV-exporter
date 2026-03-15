@@ -267,13 +267,12 @@ Path traversal protection
 - [x] CSV writing
 - [x] Path traversal protection
 - [x] Streaming generation (memory-efficient)
-- [ ] Safe Save (suffix on conflict)
+- [x] Safe Save (suffix on conflict)
 
 ### Future Development
 
 - JSON export
 - typing and input validation using Pydantic models
-- safe file writing (no overwriting)
 
 
 ## License

@@ -4,7 +4,12 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from unittest.mock import patch
 
-from project_csv.utils import export_to_csv, generate_data, _normalize_file_name
+from project_csv.utils import (
+    export_to_csv,
+    generate_data,
+    _normalize_file_name,
+    _create_file_path_unique,
+)
 from fixtures import (
     GENERATE_DATA_IDS,
     NORMALIZE_FILE_NAME_INPUTS,
@@ -58,6 +63,36 @@ def test_normalize_file_name_generates_uuid_for_empty_input(
     with patch("project_csv.utils.uuid.uuid4", return_value=fixed_uuid):
         result = _normalize_file_name(case)
     assert result == f"{fixed_uuid}.csv"
+
+
+def test_create_file_path_unique_preserves_parent_and_suffix() -> None:
+    """Verify that _create_file_path_unique() keeps the parent
+    directory and file extension unchanged.
+
+    Test case:
+        - input: ``data/report.csv`` →
+          parent is ``data/``, suffix is ``.csv``.
+    """
+    original = Path("data/report.csv")
+    result = _create_file_path_unique(original)
+    assert result.parent == original.parent
+    assert result.suffix == original.suffix
+
+
+def test_create_file_path_unique_stem_contains_uuid() -> None:
+    """Verify that _create_file_path_unique() appends a UUID4
+    to the original stem.
+
+    Test case:
+        - input: ``data/report.csv``, uuid4 mocked to
+          ``"12345678-1234-4234-8234-123456789abc"`` →
+          stem is ``report-12345678-1234-4234-8234-123456789abc``.
+    """
+    fixed_uuid = "12345678-1234-4234-8234-123456789abc"
+    original = Path("data/report.csv")
+    with patch("project_csv.utils.uuid.uuid4", return_value=fixed_uuid):
+        result = _create_file_path_unique(original)
+    assert result.stem == f"{original.stem}-{fixed_uuid}"
 
 
 def test_export_csv_creates_file(
