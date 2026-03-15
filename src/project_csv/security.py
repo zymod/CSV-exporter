@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def safe_file_path(file_name: str, base_dir: str = "data") -> Path:
+def _safe_file_path(file_name: str, base_dir: str = "data") -> Path:
     """
     Returns a safe, absolute path to a file within the base_dir,
     preventing path traversal.

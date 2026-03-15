@@ -5,7 +5,7 @@ import csv
 from pathlib import Path
 from collections.abc import Generator, Iterable
 
-from project_csv.security import safe_file_path
+from project_csv.security import _safe_file_path
 
 
 def generate_data(
@@ -75,7 +75,7 @@ def export_to_csv(
         return None
 
     try:
-        file_path = get_or_create_file_path(file_name)
+        file_path = _get_or_create_file_path(file_name)
         with open(file_path, mode="w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=first.keys())
             writer.writeheader()
@@ -87,7 +87,7 @@ def export_to_csv(
     return file_path
 
 
-def get_or_create_file_path(file_name: str) -> str:
+def _get_or_create_file_path(file_name: str) -> str:
     """Return the absolute path to a CSV file in `data/` directory.
 
     If the `data/` directory (relative to the current working directory)
@@ -104,7 +104,7 @@ def get_or_create_file_path(file_name: str) -> str:
         `/home/user/project/data/file_name.csv`.
     """
 
-    file_path = safe_file_path(file_name)
+    file_path = _safe_file_path(file_name)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     return str(file_path)
 
