@@ -20,6 +20,6 @@ def safe_file_path(file_name: str, base_dir: str = "data") -> Path:
     target_path = (base_path / file_name).resolve()
 
     if not target_path.is_relative_to(base_path):
-        raise OSError(f"Niebezpieczna ścieżka: {file_name}")
+        raise OSError(f"Unsafe file path: {file_name}")
         
     return target_path

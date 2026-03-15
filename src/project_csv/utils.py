@@ -8,7 +8,9 @@ from collections.abc import Generator, Iterable
 from project_csv.security import safe_file_path
 
 
-def generate_data(num_rows: int) -> Generator[dict[str, int | str | float], None, None]:
+def generate_data(
+    num_rows: int
+)-> Generator[dict[str, int | str | float], None, None]:
     """Yield sample data rows one at a time.
 
     Each row is a dictionary with the following keys:
@@ -101,6 +103,7 @@ def get_or_create_file_path(file_name: str) -> str:
         Absolute path to the file as a string, e.g.
         `/home/user/project/data/file_name.csv`.
     """
+
     file_path = safe_file_path(file_name)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     return str(file_path)
