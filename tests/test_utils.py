@@ -10,7 +10,7 @@ from project_csv.utils import (
     _normalize_file_name,
     _create_file_path_unique,
 )
-from fixtures import (
+from tests.cases import (
     GENERATE_DATA_IDS,
     NORMALIZE_FILE_NAME_INPUTS,
     NORMALIZE_FILE_NAME_EMPTY_INPUTS,
