@@ -1,8 +1,6 @@
 iniconfig==2.3.0
 packaging==26.0
 pluggy==1.6.0
-# Editable Git install with no remote (project_csv==0.1.0)
--e /root/projects/project_csv
 Pygments==2.19.2
 pytest==9.0.2
 python-dotenv==1.2.2
