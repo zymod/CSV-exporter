@@ -40,7 +40,7 @@ def generate_data(
 
 
 def export_to_csv(
-    data: Iterable[dict[str, int | float]],
+    data: Iterable[dict[str, int | str | float]],
     file_name: str | None = None
 ) -> str | None:
     """Export data to a CSV file in the `data/` directory.
